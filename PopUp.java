@@ -60,8 +60,6 @@ public class PopUp extends Activity {
         myBluetooth  = BluetoothAdapter.getDefaultAdapter();
 
         CheckBluetoothConnection();
-        Log.e(TAG,"----------4----" );
-
 
 
         arrayStringAdapter = new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_list_item_1, arrayList);
@@ -69,14 +67,14 @@ public class PopUp extends Activity {
         availableList.setOnItemClickListener(myListClickListener);
 
     }
+    //method for descovering new bluetooth devices
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void startDiscoveryDevices()
     {
         checkBTPermissions();
         myBluetooth.startDiscovery();
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-        registerReceiver(discoveryResult ,filter);
-        Log.e(TAG,"----------3----" );
+        registerReceiver(discoveryResult ,filter);      
     }
 
 
@@ -105,7 +103,7 @@ public class PopUp extends Activity {
         }
 
     }
-
+//this methot will run automaticly after CheckBluetoothConnection() will be executed based by user response
     @RequiresApi(api = Build.VERSION_CODES.M)
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 // TODO Auto-generated method stub
@@ -135,6 +133,7 @@ public class PopUp extends Activity {
         }
     }
 
+    //this method will get the previously paired devices
     private void pairedDevicesList()
     {
         pairedDevices = myBluetooth.getBondedDevices();
@@ -160,15 +159,16 @@ public class PopUp extends Activity {
         devicelist.setOnItemClickListener(myListClickListener); //Method called when the device from the list is clicked
     }
 
+    //this method will execute when a new unpaired bluetooth device is found
     private final BroadcastReceiver discoveryResult = new BroadcastReceiver() {
         @Override
 
         public void onReceive(Context context, Intent intent)
-        {Log.e(TAG,"----------1----" );
+        {
             String action = intent.getAction();
 
             if (BluetoothDevice.ACTION_FOUND.equals(action))
-            {Log.e(TAG,"----------2----" );
+            {
                 BluetoothDevice remoteDevice= intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                     arrayList.add(remoteDevice.getName() + "\n" + remoteDevice.getAddress());
                     arrayStringAdapter.notifyDataSetChanged();
@@ -222,6 +222,7 @@ public class PopUp extends Activity {
 
  }
 
+    //private class for bluetooth connection
     private class ConnectBT extends AsyncTask<Void, Void, Void>  // UI thread
     {
         private String ad;
